@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.dapm.org/message_type_schema.json",
+  "title": "Message Type",
+  "type": "string",
+  "enum": ["Event", "PetriNet", "Alignment", "Date", "UTCTime", "Metrics"]
+}
+

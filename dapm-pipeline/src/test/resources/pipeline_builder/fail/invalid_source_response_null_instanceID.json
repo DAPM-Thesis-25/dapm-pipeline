@@ -1,0 +1,8 @@
+{
+  "templateID": "$$$ Source",
+  "instanceID": null,
+  "producerConfig": {
+    "brokerURL": "url",
+    "topic": "topic"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "traces": [
+    {
+      "attrs": {"concept:name": "تصنيف:تجمع سكان"},
+      "events": [
+        {
+          "concept:name": "categorize",
+          "date": "1746088411"
+        }
+      ]
+    }
+  ]
+}

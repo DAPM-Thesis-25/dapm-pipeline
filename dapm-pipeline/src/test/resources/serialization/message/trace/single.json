@@ -1,0 +1,15 @@
+{
+  "traces": [
+    {
+      "attrs":
+      {
+        "concept:name": "c1"
+      },
+      "events": [
+        {
+          "concept:name": "a1",
+          "date": "t1"
+        }
+      ]
+    }]
+}

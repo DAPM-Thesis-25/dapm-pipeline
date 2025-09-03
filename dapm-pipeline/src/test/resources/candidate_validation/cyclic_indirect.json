@@ -1,0 +1,41 @@
+{
+  "processing elements":[
+    { "organizationID": "Pepsi", "hostURL": "http://localhost:8082", "templateID": "$$$ Source", "inputs": [], "output": "Event", "instanceNumber": 1, "configuration": {} },
+    { "organizationID": "INDIRECT CYCLE CONSUMER", "hostURL": "http://localhost:8092", "templateID": "TID1", "inputs": ["Event", "PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+    { "organizationID": "INDIRECT CYCLE PRODUCER", "hostURL": "http://localhost:8102", "templateID": "TID2", "inputs": ["PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+    { "organizationID": "DTU", "hostURL": "http://localhost:8112", "templateID": "Dream Sink", "inputs": ["PetriNet"], "output": null, "instanceNumber": 1, "configuration": {} }],
+
+  "channels": [
+    {
+      "publisher": { "organizationID": "Pepsi", "hostURL": "http://localhost:8082", "templateID": "$$$ Source", "inputs": [], "output": "Event", "instanceNumber": 1, "configuration": {} },
+      "subscribers": [
+        {
+          "processing element": { "organizationID": "INDIRECT CYCLE CONSUMER", "hostURL": "http://localhost:8092","templateID": "TID1", "inputs": ["Event", "PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+          "portNumber": 1
+        }
+      ]
+    },
+    {
+      "publisher": { "organizationID": "INDIRECT CYCLE CONSUMER", "hostURL": "http://localhost:8092", "templateID": "TID1", "inputs": ["Event", "PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+      "subscribers": [
+        {
+          "processing element": { "organizationID": "INDIRECT CYCLE PRODUCER", "hostURL": "http://localhost:8102", "templateID": "TID2", "inputs": ["PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+          "portNumber": 1
+        }
+      ]
+    },
+    {
+      "publisher": { "organizationID": "INDIRECT CYCLE PRODUCER", "hostURL": "http://localhost:8102", "templateID": "TID2", "inputs": ["PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+      "subscribers": [
+        {
+          "processing element": { "organizationID": "INDIRECT CYCLE CONSUMER", "hostURL": "http://localhost:8092", "templateID": "TID1", "inputs": ["Event", "PetriNet"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+          "portNumber": 2
+        },
+        {
+          "processing element": { "organizationID": "DTU", "hostURL": "http://localhost:8112", "templateID": "Dream Sink", "inputs": ["PetriNet"], "output": null, "instanceNumber": 1, "configuration": {} },
+          "portNumber": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "templateID": "Dream Sink",
+  "instanceID": "sink-id",
+  "producerConfig": {
+    "brokerURL": "url",
+    "topic": "topic"
+  }
+}

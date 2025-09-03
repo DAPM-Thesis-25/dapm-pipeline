@@ -1,0 +1,16 @@
+{
+  "string": "text",
+  "number": 42,
+  "float": 4.2,
+  "booleanTrue": true,
+  "booleanFalse": false,
+  "nullValue": null,
+  "emptyObject": {},
+  "emptyArray": [],
+  "array": [1, "two", true, {"nested": "object"}, null],
+  "object": {
+    "nestedKey": {
+      "deep": [false, 0, "end"]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.dapm.org/processing_element_reference_schema.json",
+  "title": "Processing Element Reference",
+  "type": "object",
+  "properties": {
+    "organizationID":
+    {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![ .])[^\\\\/:*?\"<>|]{1,100}(?<![ .])$"
+    },
+    "hostURL": { "type": "string", "minLength": 1 },
+    "templateID":
+    {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![ .])[^\\\\/:*?\"<>|]{1,100}(?<![ .])$"
+    },
+    "inputs": { "type": "array", "items": { "$ref": "https://www.dapm.org/message_type_schema.json" }}
+    ,
+    "output": {
+      "anyOf": [
+        { "type": "null" },
+        { "$ref": "https://www.dapm.org/message_type_schema.json" }
+      ]
+    },
+    "instanceNumber": { "type":  "integer", "minimum": 1},
+    "configuration": { "type": "object" }
+  },
+  "required": ["organizationID", "hostURL", "templateID", "inputs", "output", "instanceNumber", "configuration"],
+  "additionalProperties": false
+}

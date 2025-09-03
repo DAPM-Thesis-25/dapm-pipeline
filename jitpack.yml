@@ -1,0 +1,12 @@
+jdk:
+  - openjdk21
+install:
+  - wget https://downloads.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+  - tar -xvzf apache-maven-3.9.6-bin.tar.gz
+  - export M2_HOME=$PWD/apache-maven-3.9.6
+  - export PATH=$M2_HOME/bin:$PATH
+  - mvn -version
+
+  - cd dapm-pipeline && mvn clean && cd ..
+  - cd annotation-processor && mvn clean install -DskipTests && cd ..
+  - cd dapm-pipeline && mvn clean install -DskipTests

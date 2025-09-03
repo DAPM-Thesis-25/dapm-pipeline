@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.dapm.org/config/coca_cola_the_profit_miner_config_schema.json",
+  "title": "Coca Cola The Profit Miner Config",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}

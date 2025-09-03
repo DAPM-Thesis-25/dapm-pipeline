@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.dapm.org/config/indirect_cycle_consumer_tid1_config_schema.json",
+  "title": "INDIRECT CYCLE CONSUMER TID2 Config",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}

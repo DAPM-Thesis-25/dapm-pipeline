@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.dapm.org/config/dtu_dream_sink_config_schema.json",
+  "title": "DTU Dream Sink Config",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}

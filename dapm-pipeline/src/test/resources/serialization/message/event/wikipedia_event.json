@@ -1,0 +1,16 @@
+{
+  "traces": [
+    {
+      "attrs":
+      {
+        "concept:name": "File:THIRTEENTH ANNUAL REUNION & BANQUET (held by) UNION COLLEGE \nALUMNI ASSOCIATION OF NEW YORK (at) \"SAVOY, THE, NEW YORK, NY\" (HOTEL;) (NYPL Hades-275181-4000011701).jpg"
+      },
+      "events": [
+        {
+          "concept:name": "edit",
+          "date": "1746088230"
+        }
+      ]
+    }
+  ]
+}
