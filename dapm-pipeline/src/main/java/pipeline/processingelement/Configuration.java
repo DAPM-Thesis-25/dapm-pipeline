@@ -31,4 +31,10 @@ public class Configuration {
     @Override
     public int hashCode() { return configuration.hashCode(); }
 
+    @Override
+    public String toString() {
+        return "Configuration" + configuration;
+    }
+
+
 }

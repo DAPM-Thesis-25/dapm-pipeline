@@ -9,6 +9,7 @@ public class PEInstanceRequest {
 
     private List<ConsumerConfig> consumerConfigs;
     private Configuration configuration;
+    private String token;
 
     public PEInstanceRequest() {
     }
@@ -23,6 +24,14 @@ public class PEInstanceRequest {
 
     public void setConsumerConfigs(List<ConsumerConfig> consumerConfigs) {
         this.consumerConfigs = consumerConfigs;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public void setConfiguration(Configuration configuration) {

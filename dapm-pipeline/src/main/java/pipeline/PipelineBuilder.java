@@ -7,33 +7,90 @@ import communication.API.request.HTTPRequest;
 import communication.API.request.PEInstanceRequest;
 import communication.API.response.HTTPResponse;
 import communication.API.response.PEInstanceResponse;
+import communication.ConsumerFactory;
+import communication.ProducerFactory;
 import communication.config.ConsumerConfig;
 import communication.config.ProducerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import repository.PEInstanceRepository;
 import repository.PipelineRepository;
+import repository.TemplateRepository;
 import utils.graph.DG;
 import utils.JsonUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
+import communication.API.request.PEInstanceRequest;
+import communication.API.response.PEInstanceResponse;
+import communication.ConsumerFactory;
+import communication.ProducerFactory;
+import communication.config.ConsumerConfig;
+import communication.config.ProducerConfig;
+import communication.message.Message;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pipeline.processingelement.Sink;
+import pipeline.processingelement.operator.Operator;
+import pipeline.processingelement.source.Source;
+import repository.PEInstanceRepository;
+import repository.TemplateRepository;
+import utils.IDGenerator;
+import utils.JsonUtil;
 @Component
 public class PipelineBuilder {
     private final HTTPClient webClient;
     private final PipelineRepository pipelineRepository;
 
+    private final TemplateRepository templateRepository;
+    private final PEInstanceRepository peInstanceRepository;
+    private final ConsumerFactory consumerFactory;
+    private final ProducerFactory producerFactory;
+    @Value("${organization.broker.port}")
+    private String brokerURL;
+
+
     @Autowired
-    public PipelineBuilder(HTTPClient webClient, PipelineRepository pipelineRepository) {
+    public PipelineBuilder(HTTPClient webClient,
+                           PipelineRepository pipelineRepository,
+                           TemplateRepository templateRepository,
+                           PEInstanceRepository peInstanceRepository,
+                           ConsumerFactory consumerFactory,
+                           ProducerFactory producerFactory) {
         this.webClient = webClient;
         this.pipelineRepository = pipelineRepository;
+        this.templateRepository = templateRepository;
+        this.peInstanceRepository = peInstanceRepository;
+        this.consumerFactory = consumerFactory;
+        this.producerFactory = producerFactory;
     }
 
     public void buildPipeline(String pipelineID, ValidatedPipeline validatedPipeline) {
         Pipeline pipeline = new Pipeline(pipelineID, validatedPipeline.getChannels());
         buildPipeline(pipeline);
         pipelineRepository.storePipeline(pipelineID, pipeline);
+        for (Map.Entry<String, ProcessingElementReference> entry : pipeline.getProcessingElements().entrySet()) {
+            String instanceID = entry.getKey();
+            ProcessingElementReference peRef = entry.getValue();
+            System.out.println("Instance: " + instanceID + " -> Config: " + peRef.getConfiguration());
+        }
+
     }
+    public void buildPipeline(String pipelineID,
+                              ValidatedPipeline validatedPipeline,
+                              Map<String, String> externalPEsTokens) {
+        Pipeline pipeline = new Pipeline(pipelineID, validatedPipeline.getChannels());
+        buildPipeline(pipeline, externalPEsTokens);
+        pipelineRepository.storePipeline(pipelineID, pipeline);
+
+        for (Map.Entry<String, ProcessingElementReference> entry : pipeline.getProcessingElements().entrySet()) {
+            System.out.println("Instance: " + entry.getKey() +
+                    " -> Config: " + entry.getValue().getConfiguration());
+        }
+    }
+
 
     private void buildPipeline(Pipeline pipeline) {
         Map<ProcessingElementReference, PEInstanceResponse> configuredInstances = new HashMap<>();
@@ -63,6 +120,48 @@ public class PipelineBuilder {
                 }
 
                 // Add all downstream nodes for the next level
+                nextLevel.addAll(pipeline.getDirectedGraph().getDownStream(pe));
+            }
+            currentLevel = nextLevel;
+        }
+    }
+
+
+    private void buildPipeline(Pipeline pipeline, Map<String, String> externalPEsTokens) {
+        Map<ProcessingElementReference, PEInstanceResponse> configuredInstances = new HashMap<>();
+        Set<ProcessingElementReference> currentLevel = pipeline.getSources();
+        DG<ProcessingElementReference, Integer> directedGraph = pipeline.getDirectedGraph();
+
+        while (!currentLevel.isEmpty()) {
+            Set<ProcessingElementReference> nextLevel = new HashSet<>();
+            for (ProcessingElementReference pe : currentLevel) {
+                if (configuredInstances.containsKey(pe)) continue;
+                if (!allInputsReady(directedGraph, configuredInstances, pe)) {
+                    nextLevel.add(pe);
+                    continue;
+                }
+
+                PEInstanceResponse response;
+
+                if (externalPEsTokens.containsKey(pe.getTemplateID())) {
+                    // EXTERNAL → use HTTP with token
+                    String token = externalPEsTokens.get(pe.getTemplateID());
+                    response = createExternalInstance(pe, directedGraph, configuredInstances, token);
+                } else {
+                    // LOCAL → instantiate directly
+                    if (pe.isSource()) {
+                        response = createLocalSource(pe);
+                    } else if (pe.isOperator()) {
+                        List<ConsumerConfig> consumerConfigs = getConsumerConfigs(directedGraph, pe, configuredInstances);
+                        response = createLocalOperator(pe, consumerConfigs);
+                    } else {
+                        List<ConsumerConfig> consumerConfigs = getConsumerConfigs(directedGraph, pe, configuredInstances);
+                        response = createLocalSink(pe, consumerConfigs);
+                    }
+                }
+
+                configuredInstances.put(pe, response);
+                pipeline.addProcessingElement(response.getInstanceID(), pe);
                 nextLevel.addAll(pipeline.getDirectedGraph().getDownStream(pe));
             }
             currentLevel = nextLevel;
@@ -168,4 +267,71 @@ public class PipelineBuilder {
         }
         return peInstanceResponse;
     }
+    private PEInstanceResponse createLocalSource(ProcessingElementReference pe) {
+        Source<Message> source = templateRepository.createInstanceFromTemplate(
+                pe.getTemplateID(), pe.getConfiguration());
+
+        String topic = IDGenerator.generateTopic();
+        ProducerConfig producerConfig = new ProducerConfig(brokerURL, topic);
+        producerFactory.registerProducer(source, producerConfig);
+
+        String instanceID = peInstanceRepository.storeInstance(source);
+        return new PEInstanceResponse.Builder(pe.getTemplateID(), instanceID)
+                .producerConfig(producerConfig)
+                .build();
+    }
+
+    private PEInstanceResponse createLocalOperator(ProcessingElementReference pe,
+                                                   List<ConsumerConfig> consumerConfigs) {
+        Operator<Message, Message> operator = templateRepository.createInstanceFromTemplate(
+                pe.getTemplateID(), pe.getConfiguration());
+
+        for (ConsumerConfig c : consumerConfigs) {
+            consumerFactory.registerConsumer(operator, c);
+        }
+
+        String topic = IDGenerator.generateTopic();
+        ProducerConfig producerConfig = new ProducerConfig(brokerURL, topic);
+        producerFactory.registerProducer(operator, producerConfig);
+
+        String instanceID = peInstanceRepository.storeInstance(operator);
+        return new PEInstanceResponse.Builder(pe.getTemplateID(), instanceID)
+                .producerConfig(producerConfig)
+                .build();
+    }
+
+    private PEInstanceResponse createLocalSink(ProcessingElementReference pe,
+                                               List<ConsumerConfig> consumerConfigs) {
+        Sink sink = templateRepository.createInstanceFromTemplate(
+                pe.getTemplateID(), pe.getConfiguration());
+
+        for (ConsumerConfig c : consumerConfigs) {
+            consumerFactory.registerConsumer(sink, c);
+        }
+
+        String instanceID = peInstanceRepository.storeInstance(sink);
+        return new PEInstanceResponse.Builder(pe.getTemplateID(), instanceID).build();
+    }
+
+    private PEInstanceResponse createExternalInstance(ProcessingElementReference pe,
+                                                      DG<ProcessingElementReference, Integer> directedGraph,
+                                                      Map<ProcessingElementReference, PEInstanceResponse> configuredInstances,
+                                                      String token) {
+        PEInstanceRequest requestBody = new PEInstanceRequest();
+        requestBody.setConfiguration(pe.getConfiguration());
+        requestBody.setToken(token);
+
+        if (pe.isOperator() || pe.isSink()) {
+            List<ConsumerConfig> consumerConfigs = getConsumerConfigs(directedGraph, pe, configuredInstances);
+            requestBody.setConsumerConfigs(consumerConfigs);
+        }
+
+        String encodedTemplateID = JsonUtil.encode(pe.getTemplateID());
+        String typePath = pe.isSource() ? "source" : pe.isOperator() ? "operator" : "sink";
+        String url = pe.getOrganizationHostURL() + "/pipelineBuilder/" + typePath + "/templateID/" + encodedTemplateID;
+
+        return sendPostRequest(url, requestBody);
+    }
+
+
 }
