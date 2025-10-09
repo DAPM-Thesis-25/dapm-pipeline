@@ -14,7 +14,8 @@ public class PEInstanceRepository {
 
     public String storeInstance(ProcessingElement instance) {
         String instanceID = IDGenerator.generateInstanceID();
-        instances.put(instanceID, instance);
+        System.out.println("[PEInstanceRepository] Stored " + instance.getClass().getSimpleName()
+                + " with ID = " + instanceID);        instances.put(instanceID, instance);
         return instanceID;
     }
 
@@ -23,6 +24,9 @@ public class PEInstanceRepository {
     }
 
     public <T extends ProcessingElement> T getInstance(String instanceID) {
+        ProcessingElement pe = this.instances.get(instanceID);
+        System.out.println("[PEInstanceRepository] Lookup ID = " + instanceID
+                + " -> Found? " + (pe != null));
         return (T) instances.get(instanceID);
     }
 }

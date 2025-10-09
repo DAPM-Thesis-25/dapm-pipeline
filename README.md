@@ -3,10 +3,9 @@ This repository is a facet of the DAPM (Distributed Architecture for Process Min
 
 Read documentation [here](https://github.com/DAPM-Thesis/dapm-thesis/tree/main/dapm-pipeline/documentation)
 
-The repository is shared by three DAPM groups:
+
 1. Christian Becke, Zou Yong Nan Klaassen
-2. Reshma Zaman, Tama Sarker
-3. Hussein Dirani, Raihanullah Mehran
+
 ## Projects
 Each folder is a separate Maven project with its own `pom.xml` file.
 
