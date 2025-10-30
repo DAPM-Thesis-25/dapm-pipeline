@@ -1,0 +1,36 @@
+{
+  "traces": [
+    {
+      "attrs":
+      {
+        "concept:name": "C1"
+      },
+      "events": [
+        {
+          "concept:name": "A1",
+          "date": "1"
+        },
+        {
+          "concept:name": "A2",
+          "date": "2"
+        }
+      ]
+    },
+    {
+      "attrs":
+      {
+        "concept:name": "00"
+      },
+      "events": [
+        {
+          "concept:name": "A1",
+          "date": "00"
+        },
+        {
+          "concept:name": "A3",
+          "date": "00"
+        }
+      ]
+    }
+  ]
+}

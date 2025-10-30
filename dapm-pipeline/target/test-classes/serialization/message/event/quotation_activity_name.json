@@ -1,0 +1,16 @@
+{
+  "traces": [
+    {
+      "attrs":
+      {
+        "concept:name": "\"quoted\""
+      },
+      "events": [
+        {
+          "concept:name": "act",
+          "date": "time"
+        }
+      ]
+    }
+  ]
+}

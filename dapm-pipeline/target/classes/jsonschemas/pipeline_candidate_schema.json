@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.dapm.org/pipeline_draft_schema.json",
+  "title": "Pipeline Draft",
+  "type": "object",
+  "properties": {
+    "processing elements":
+    {
+      "type": "array",
+      "items": { "$ref": "https://www.dapm.org/processing_element_reference_schema.json"},
+      "minItems": 2,
+      "uniqueItems": true,
+      "allOf": [
+        {
+          "contains": { "type": "object", "properties": { "inputs": { "type": "array", "maxItems": 0} }},
+          "required": ["inputs"]
+        },
+        {
+          "contains": { "type": "object", "properties": { "output": { "type": "null"} }},
+          "required": ["output"]
+        }
+      ]
+    },
+    "channels":
+    {
+      "type": "array",
+      "items": { "$ref": "https://www.dapm.org/channel_reference_schema.json"},
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": ["processing elements", "channels"],
+  "additionalProperties": false
+}
+

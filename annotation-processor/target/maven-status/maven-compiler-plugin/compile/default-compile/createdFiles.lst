@@ -1,0 +1,4 @@
+processors\MissingMessageAnnotationProcessor.class
+annotations\AutoRegisterMessage.class
+META-INF\services\javax.annotation.processing.Processor
+processors\MessageTypeRegistryProcessor.class

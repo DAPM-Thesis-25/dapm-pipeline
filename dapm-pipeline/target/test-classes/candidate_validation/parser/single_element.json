@@ -1,0 +1,8 @@
+{
+  "processing elements":[
+    { "organizationID": "Coca Cola", "hostURL": "http://localhost:8082", "templateID": "The Profit Miner", "inputs": ["Event"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} }
+  ],
+
+  "channels": [
+  ]
+}

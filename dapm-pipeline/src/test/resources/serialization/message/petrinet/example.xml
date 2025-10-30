@@ -1,0 +1,53 @@
+<pnml xmlns="https://www.pnml.org/version-2009/version-2009.php">
+    <net id="pn" type="https://orbit.dtu.dk/en/publications/a-primer-on-the-petri-net-markup-language-and-isoiec-15909-2">
+        <page id="top-level">
+            <name>
+                <text>Petri Net name</text>
+            </name>
+            <place id="p1">
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+            </place>
+            <place id="p2">
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+            </place>
+            <place id="p3">
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+            </place>
+            <place id="p4">
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+            </place>
+            <transition id="t1">
+
+            </transition>
+            <transition id="t2">
+
+            </transition>
+            <arc id="a2_1" source="t1" target="p2">
+
+            </arc>
+            <arc id="a1" source="p1" target="t1">
+
+            </arc>
+            <arc id="a4" source="t2" target="p4">
+
+            </arc>
+            <arc id="a2_2" source="t1" target="p3">
+
+            </arc>
+            <arc id="a3_1" source="p2" target="t2">
+
+            </arc>
+            <arc id="a3_2" source="p3" target="t2">
+
+            </arc>
+        </page>
+    </net>
+</pnml>

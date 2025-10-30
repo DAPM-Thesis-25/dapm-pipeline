@@ -1,0 +1,2 @@
+processors.MessageTypeRegistryProcessor
+processors.MissingMessageAnnotationProcessor

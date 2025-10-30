@@ -1,0 +1,18 @@
+{
+  "processing elements":[
+    { "orgID": "Coca Cola", "hostURL": "http://localhost:8082", "templateID": "The Profit Miner", "inputs": ["Event"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+    { "orgID": "DTU", "hostURL": "http://localhost:8092", "templateID": "Dream Sink", "inputs": ["PetriNet"], "output": null, "instanceNumber": 1, "configuration": {} }
+  ],
+
+  "channels": [
+    {
+      "publisher": { "orgID": "Coca Cola", "hostURL": "http://localhost:8082", "templateID": "The Profit Miner", "inputs": ["Event"], "output": "PetriNet", "instanceNumber": 1, "configuration": {} },
+      "subscribers": [
+        {
+          "processing element": { "orgID": "DTU", "hostURL": "http://localhost:8092", "templateID": "Dream Sink", "inputs": ["PetriNet"], "output": null, "instanceNumber": 1, "configuration": {} },
+          "portNumber": 1
+        }
+      ]
+    }
+  ]
+}

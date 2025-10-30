@@ -1,0 +1,23 @@
+{
+  "traces": [
+    {
+      "attrs":
+      {
+        "concept:name": "c1"
+      },
+      "events": [
+        {
+          "concept:name": "a1",
+          "date": "t1"
+        },
+        {
+          "concept:name": "a2",
+          "date": "t2"
+        },
+        {
+          "concept:name": "a3",
+          "date": "t3"
+        }
+      ]
+    }]
+}

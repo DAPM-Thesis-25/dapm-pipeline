@@ -1,0 +1,12 @@
+candidate_validation\CandidateParserTest.class
+serialization\message\MessageSerializerTest.class
+serialization\message\MessageDeserializerTest.class
+serialization\message\MessageDeserializerTest$1.class
+serialization\JXESParserTest.class
+PipelineBuilderTest.class
+testconfig\PipelineBuilderTestConfig.class
+serialization\message\MessageDeserializerTest$3.class
+candidate_validation\PipelineCandidateValidatorTest.class
+serialization\message\MessageDeserializerTest$2.class
+PetriNetTest.class
+serialization\JSONParserTest.class
