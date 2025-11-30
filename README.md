@@ -1,9 +1,8 @@
 # dapm-thesis
+This repo is inherited from Christian Becke, Zou Yong Nan Klaassen and extended to support my goals.
 This repository is a facet of the DAPM (Distributed Architecture for Process Mining) Online Data Streaming Pipelines theses. 
 
 Read documentation [here](https://github.com/DAPM-Thesis/dapm-thesis/tree/main/dapm-pipeline/documentation)
-
-
 1. Christian Becke, Zou Yong Nan Klaassen
 
 ## Projects
